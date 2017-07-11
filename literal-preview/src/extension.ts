@@ -69,16 +69,35 @@ function createRow(type : string, value : string)
     return '' + type + value + '\n'
 }
 
+function getFirstHexadecimal(text : string)
+{
+    var regex = new RegExp('^(0[xX])?[0-9a-fA-F]+$');
+    var match = text.match(regex);
+
+    if(match.length > 0)
+    {
+        // Return first group
+        return match[0];
+    }
+    return '';
+}
+
+function isNumberAndNotZero(text : string)
+{
+    var number = new Number(text); 
+    return number != 0 && number != Number.NaN;
+}
+
+function zeroPad(text : string, length : number)
+{
+    var pad = new Array(length).fill('0').join('');
+    pad = (pad + text);
+    return pad.substring(pad.length - length);
+}
+
 function prepareHoverText(text : string)
 {
-    var asInt32;
-    if(text.includes('.')) {
-        asInt32 = floatToInt32(text);
-    }
-    else {
-        asInt32 = parseInt(text);
-    }
-
+    var asInt32 = parseInt(text, 16);
     var buffer = new ArrayBuffer(4);
     var int32Arr = new Int32Array(buffer, 0, 1);
     int32Arr[0] = asInt32;
@@ -90,14 +109,28 @@ function prepareHoverText(text : string)
     var float16high = asFloat32(int16Arr[1]);
     var float16low = asFloat32(int16Arr[0]);
 
-    var hoverText = '' 
-    + createRow('Float32', '' + float32Arr[0].toPrecision(8)) 
-    + createRow('Float16', '' + float16high.toPrecision(5) + ' : ' + float16low.toPrecision(5)) 
-    + createRow('Int32', '' + int32Arr[0]) 
-    + createRow('Int16', '' + int16Arr[1] +  ' : ' + int16Arr[0]) 
-    + createRow('Uint32', '' + uint32Arr[0]) 
-    + createRow('Uint16', '' + uint16Arr[1] + ' : ' + uint16Arr[0]) 
-    + '';
+    var hoverText = '';
+    if(uint16Arr[1] != 0)
+    {
+        var binary = uint32Arr[0].toString(2); 
+        binary = zeroPad(binary, 32);
+        // Show the conversion for 32bit, if more than 16bit are used
+        hoverText += createRow('Float32', '' + float32Arr[0].toPrecision(8)) 
+                    + createRow('Float16', '' + float16high.toPrecision(5) + ' : ' + float16low.toPrecision(5)) 
+                    + createRow('Int32', '' + int32Arr[0]) 
+                    + createRow('Int16', '' + int16Arr[1] +  ' : ' + int16Arr[0]) 
+                    + createRow('Uint32', '' + uint32Arr[0]) 
+                    + createRow('Uint16', '' + uint16Arr[1] + ' : ' + uint16Arr[0])
+                    + createRow('Binary', binary);
+    }
+    else {
+        var binary = uint16Arr[0].toString(2);
+        binary = zeroPad(binary, 16);
+        hoverText += createRow('Float16', '' + float16low.toPrecision(5)) 
+                    + createRow('Int16', '' + int16Arr[0]) 
+                    + createRow('Uint16', '' + uint16Arr[0])
+                    + createRow('Binary', binary);
+    }
 
     var markedString : vscode.MarkedString = {
         language: 'html',
@@ -123,8 +156,9 @@ class LiteralPreviewHoverProvider implements vscode.HoverProvider
             var selectedText = document.getText(range);
 
             // Check if we have to display anything, 
-            // i.e. we can make a number out of the selected text.
-            if(Number(selectedText) != Number.NaN) {
+            // i.e. we can make a hex number out of the selected text.
+            selectedText = getFirstHexadecimal(selectedText);
+            if(isNumberAndNotZero(selectedText)) {
                 var hoverText = prepareHoverText(selectedText);
                 return new vscode.Hover(hoverText);
             }

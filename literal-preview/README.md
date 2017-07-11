@@ -1,31 +1,29 @@
 # Literal Preview
 
-This extension provides a way to preview literals in different numerical representations when hovering over them.
+This extension provides a way to preview hexadecimal literals in different numerical representations when hovering over them.
 
 Open the command palette (`Ctrl+Shift+P`) and type `Enable: Preview Literals` to enable hovering over literals. Type `Disable: Preview Literals` to disable the feature.
 
 
 ## Features
 
-Previewing a
-- 32bit **floating point** literal
-- 32bit **hexadecimal** literal
-- 32bit **decimal** literal
-
-as 
+Previewing a **hexadecimal** literal as 
 - 32bit **floating point** value
 - 2x 16bit **floating point** value
 - 32bit **signed integer** value
 - 2x 16bit **signed integer** value
 - 32bit **unsigned integer** value
 - 2x 16bit **unsigned integer** value
+- 16bit or 32bit **binary**
 
 The higher 16bit values are always shown first.
+If the literal fits into 16bit, only the 16bit values are shown.
+If a literal maps to zero, no tooltip is shown.
 
 ## Known Issues
 
-- There is no explicit support for NaN and Infinity for floating point literals. 
-- Negated literals are not recognized
+- Negated literals are not recognized.
+- Hovering over floating point values interprets the pre-decimal positions as hexadecimal value.
 
 ## Release Notes
 
