@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>scopeName</key>
+        <string>source.isa</string>
+
+        <key>fileTypes</key>
+        <array>
+			<string>isa</string>
+			<string>il</string>
+			<string>isa.txt</string>
+			<string>il.txt</string>
+        </array>
+
+        <key>name</key>
+        <string>AMD GCN ISA</string>
+
+        <key>patterns</key>
+        <array>
+            <dict>
+                <key>match</key>
+                <string>\b((ds|buffer|flat|image)_[a-zA-Z0-9_]+)\b</string>
+                <key>name</key>
+                <string>storage.type.amd-gcn-isa</string>
+            </dict>               
+            <dict>
+                <key>match</key>
+                <string>\b(v_[a-zA-Z0-9_]+)\b</string>
+                <key>name</key>
+                <string>keyword.vector.amd-gcn-isa</string>
+            </dict>  
+            <dict>
+                <key>match</key>
+                <string>\b(s_[a-zA-Z0-9_]+)\b</string>
+                <key>name</key>
+                <string>keyword.scalar.amd-gcn-isa</string>
+            </dict>   
+            <dict>
+                <key>match</key>
+                <string>\b(label_[a-zA-Z0-9]+)\b</string>
+                <key>name</key>
+                <string>keyword.control.label.amd-gcn-isa</string>
+            </dict>   
+            <dict>
+                <key>match</key>
+                <string>\b(v[0-9.]+|vcc|v)\b</string>
+                <key>name</key>
+                <string>support.variable.vector.amd-gcn-isa</string>
+            </dict>
+            <dict>
+                <key>match</key>
+                <string>\b(s[0-9.]+|s)\b</string>
+                <key>name</key>
+                <string>support.variable.scalar.amd-gcn-isa</string>
+            </dict>
+            <dict>
+                <key>match</key>
+                <string>//.*\n</string>
+                <key>name</key>
+                <string>comment.line.double-slash.amd-gcn-isa</string>
+            </dict>      
+            <dict>
+                <key>match</key>
+                <string>\b[0-9]+\.[0-9]+\b</string>
+                <key>name</key>
+                <string>constant.numeric.float.amd-gcn-isa</string>
+            </dict>   
+            <dict>
+                <key>match</key>
+                <string>\b(0x[a-zA-Z0-9]+)|([0-9]+)\b</string>
+                <key>name</key>
+                <string>constant.numeric.integer.amd-gcn-isa</string>
+            </dict>                        
+        </array>
+    </dict>
+</plist>

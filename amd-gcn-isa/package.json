@@ -1,0 +1,26 @@
+{
+    "name": "amd-gcn-isa",
+    "displayName": "AMD GCN ISA",
+    "description": "Language support for AMD GCN instruction set architecture.",
+    "version": "1.0.0",
+    "publisher": "dbaumeis",
+    "engines": {
+        "vscode": "^1.13.0"
+    },
+    "categories": [
+        "Languages"
+    ],
+    "contributes": {
+         "languages": [{
+            "id": "amd-gcn-isa",
+            "aliases": ["AMD GCN ISA", "isa"],
+            "extensions": [".isa",".il",".isa.txt",".il.txt"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "amd-gcn-isa",
+            "scopeName": "source.isa",
+            "path": "./syntaxes/isa.tmLanguage"
+        }]
+    }
+}
