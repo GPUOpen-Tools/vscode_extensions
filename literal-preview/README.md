@@ -22,21 +22,6 @@ as
 
 The higher 16bit values are always shown first.
 
-
-## Pictures
-
-Floating point preview:
-
-<img src="pictures/float_preview.png" alt="Float Preview" style="height:228px;">
-
-Hexadecimal preview:
-
-<img src="pictures/hex_preview.png" alt="Hexadecimal Preview" style="height:228px;">
-
-Integer preview
-
-<img src="pictures/int_preview.png" alt="Integer Preview" style="height:228px;">
-
 ## Known Issues
 
 - There is no explicit support for NaN and Infinity for floating point literals. 
