@@ -2,7 +2,7 @@
     "name": "literal-preview",
     "displayName": "Literal Preview",
     "description": "Preview literals with different numerical representations.",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "publisher": "dbaumeis",
     "engines": {
         "vscode": "^1.13.0"
