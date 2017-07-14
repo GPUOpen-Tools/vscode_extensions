@@ -20,7 +20,7 @@
         <array>
             <dict>
                 <key>match</key>
-                <string>\b((ds|buffer|flat|image)_[a-zA-Z0-9_]+)\b</string>
+                <string>\b((s_)?(ds|buffer|flat|image)_[a-zA-Z0-9_]+)\b</string>
                 <key>name</key>
                 <string>storage.type.amd-gcn-isa</string>
             </dict>               
