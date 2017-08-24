@@ -1,0 +1,169 @@
+{
+    "name": "radeon-gpu-analyzer",
+    "displayName": "Radeon GPU Analyzer",
+    "description": "VSCode Interface for RGA AMDs Radeon GPU Analyzer.",
+    "version": "1.0.0",
+    "publisher": "dbaumeis",
+    "engines": {
+        "vscode": "^1.14.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "*"
+    ],
+    "main": "./out/src/extension",
+    "contributes": {
+        "commands": [
+            {
+                "command": "extension.callRga.hlsl",
+                "title": "Call RGA: HLSL"
+            },
+            {
+                "command": "extension.callRga.vulkan",
+                "title": "Call RGA: Vulkan"
+            },
+            {
+                "command": "extension.callRga.spirv",
+                "title": "Call RGA: SPIR-V"
+            },
+            {
+                "command": "extension.callRga.amdil",
+                "title": "Call RGA: AMD IL"
+            },
+            {
+                "command": "extension.replayRga",
+                "title": "Replay RGA"
+            }
+        ],
+        "menus": {
+            "editor/context": [
+                {
+                    "when": "resourceLangId == hlsl",
+                    "command": "extension.callRga.hlsl",
+                    "group": "2_rga"
+                },
+                {
+                    "when": "resourceLangId == vulkan",
+                    "command": "extension.callRga.vulkan",
+                    "group": "2_rga"
+                },
+                {
+                    "when": "resourceLangId == spirv",
+                    "command": "extension.callRga.spirv",
+                    "group": "2_rga"
+                },
+                {
+                    "when": "resourceLangId == amdil",
+                    "command": "extension.callRga.amdil",
+                    "group": "2_rga"
+                },
+                {
+                    "when": "resourceLangId == hlsl",
+                    "command": "extension.replayRga",
+                    "group": "2_rga"
+                },
+                {
+                    "when": "resourceLangId == vulkan",
+                    "command": "extension.replayRga",
+                    "group": "2_rga"
+                },
+                {
+                    "when": "resourceLangId == spirv",
+                    "command": "extension.replayRga",
+                    "group": "2_rga"
+                },
+                {
+                    "when": "resourceLangId == amdil",
+                    "command": "extension.replayRga",
+                    "group": "2_rga"
+                }
+            ]
+        },
+        "keybindings": [
+            {
+                "when": "resourceLangId == hlsl",
+                "command": "extension.callRga.hlsl",
+                "key": "ctrl+."
+            },
+            {
+                "when": "resourceLangId == vulkan",
+                "command": "extension.callRga.vulkan",
+                "key": "ctrl+."
+            },
+            {
+                "when": "resourceLangId == spirv",
+                "command": "extension.callRga.spirv",
+                "key": "ctrl+."
+            },
+            {
+                "when": "resourceLangId == amdil",
+                "command": "extension.callRga.amdil",
+                "key": "ctrl+."
+            },
+            {
+                "command": "extension.replayRga",
+                "key": "f7"
+            }
+        ],
+        "configuration": {
+            "type": "object",
+            "title": "RGA Configuration",
+            "properties": {
+                "rga.path": {
+                    "type": "string",
+                    "default": "rga.exe",
+                    "description": "Path to the RGA executable. Get it from here: https://github.com/GPUOpen-Tools/RGA/releases"
+                },
+                "rga.arguments.hlsl": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Define additional arguments to pass to RGA - HLSL, e.g. '--intrinsics --UAVSlot 63'"
+                },
+                "rga.arguments.vulkan": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Define additional arguments to pass to RGA - Vulkan, e.g. '--cfg control_flow_graph'"
+                },
+                "rga.arguments.spirv": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Define additional arguments to pass to RGA - SPIR-V, e.g. '--cfg control_flow_graph'"
+                },
+                "rga.arguments.amdil": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Define additional arguments to pass to RGA - AMD IL, e.g. '--cfg control_flow_graph'"
+                },
+                "rga.viewColumn.il": {
+                    "type": "number",
+                    "default": 1,
+                    "description": "Number of the view column the output IL will be shown (1, 2 or 3). Pass in -1 if you don't want to open the IL."
+                },
+                "rga.viewColumn.isa": {
+                    "type": "number",
+                    "default": 2,
+                    "description": "Number of the view column the output ISA will be shown (1, 2 or 3). Pass in -1 if you don't want to open the ISA."
+                }
+            }
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "tsc -p ./",
+        "compile": "tsc -watch -p ./",
+        "postinstall": "node ./node_modules/vscode/bin/install",
+        "test": "node ./node_modules/vscode/bin/test"
+    },
+    "devDependencies": {
+        "typescript": "^2.0.3",
+        "vscode": "^1.0.0",
+        "mocha": "^2.3.3",
+        "@types/node": "^6.0.40",
+        "@types/mocha": "^2.2.32"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/GPUOpen-Tools/vscode-extensions.git"
+    }
+}
