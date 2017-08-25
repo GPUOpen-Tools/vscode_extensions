@@ -1,8 +1,8 @@
 {
     "name": "radeon-gpu-analyzer",
     "displayName": "Radeon GPU Analyzer",
-    "description": "VSCode Interface for RGA AMDs Radeon GPU Analyzer.",
-    "version": "1.0.0",
+    "description": "VSCode Interface for AMD's RGA (Radeon GPU Analyzer).",
+    "version": "1.0.1",
     "publisher": "dbaumeis",
     "engines": {
         "vscode": "^1.14.0"
