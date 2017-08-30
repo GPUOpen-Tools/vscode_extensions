@@ -32,6 +32,7 @@ export class VulkanCommand extends RgaCommand
     protected getInitializingFunctions()
     {
         var methods = [
+            () => {return this.initializeEntryPoint()},
             () => {return this.initializeTargetProfile()} 
         ];
         return methods;

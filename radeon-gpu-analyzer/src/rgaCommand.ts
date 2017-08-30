@@ -62,10 +62,20 @@ export abstract class RgaCommand
         return true;
     }
 
-    private initializeEntryPoint() : boolean
+    protected initializeEntryPoint() : boolean
     {
         var selection = vscode.window.activeTextEditor.selection;
         var text = vscode.window.activeTextEditor.document.getText(selection);
+        
+        var regex = new RegExp('^[a-zA-Z][a-zA-Z0-9]*$');
+        var match = text.match(regex);
+        
+        if(match === null || match.length !== 1)
+        {
+            vscode.window.showInformationMessage("Please select a single word as entry point.")
+            return false;
+        }
+
         this.entryPoint = text;
         return true;
     }
@@ -89,7 +99,6 @@ export abstract class RgaCommand
     {
         var methods = this.getInitializingFunctions();
         methods.push(
-            () => {return this.initializeEntryPoint()},
             () => {return this.initializeSourcePath()},
             () => {return this.initializeIsaPath()},
             () => {return this.initializeIlPath()},
