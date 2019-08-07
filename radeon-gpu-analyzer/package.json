@@ -92,31 +92,6 @@
         },
         "keybindings": [
             {
-                "when": "resourceLangId == hlsl",
-                "command": "extension.callRga.dx11",
-                "key": "ctrl+."
-            },
-            {
-                "when": "resourceLangId == hlsl",
-                "command": "extension.callRga.dx12",
-                "key": "ctrl+."
-            },
-            {
-                "when": "resourceLangId == vulkan",
-                "command": "extension.callRga.vulkan",
-                "key": "ctrl+."
-            },
-            {
-                "when": "resourceLangId == spirv",
-                "command": "extension.callRga.spirv",
-                "key": "ctrl+."
-            },
-            {
-                "when": "resourceLangId == amdil",
-                "command": "extension.callRga.amdil",
-                "key": "ctrl+."
-            },
-            {
                 "command": "extension.replayRga",
                 "key": "f7"
             }

@@ -7,11 +7,11 @@ This is a Visual Studio Code extension for the [Radeon GPU Analyzer](https://git
 - View the disassembly from compiling HLSL, SPIR-V and Vulkan (GLSL) shaders down to AMD IL and AMD GCN ISA.
 - View the disassembly from compiling AMD IL shaders to AMD GCN ISA.
 - The current word selection is used as entry function of your shader.
-- The shader model / shader type and the target architecture can be easily used from drop down menus.
+- The shader model / shader type and the target architecture are chosen via drop down menus.
 - The last command per shader is saved and can be replayed. This allows you to spot the impact your code changes have on the ISA. 
 - If you open the shader in a VSCode project, created files will open in a new view.
 - See all compiler errors and warnings in the VSCode terminal.
-- You can add language specific command line arguments via settings.
+- You can add language specific command line arguments via settings or just configure the command line in the terminal directly.
 
 ## Usage
 
@@ -36,11 +36,10 @@ E.g. to compile an HLSL shader for the use on RX 5700 XT:
 
 ## Notes
 
-- For HLSL the file extension `.hlsl` is recognized automatically. You can skip steps `4` and `5` and only use the key binding instead (defaults to `Ctrl+.`).
 - AMD IL does not require an entry point, no need to do step `3` in that case.
-- You can only build for GPUs that the compiler knows about in the driver you have installed.
 - All files are created next to the shader source file.
 - RGA will prefix the generated ISA and IL filenames with the name of the GPU family you are compiling for, and the function entry point if that applies.
+- RGA does not support AMD IL for DX12 shaders as of version 2.2 - the compiled DXIL is shown instead.  
 
 ## Requirements
 
@@ -53,11 +52,6 @@ The source code can be found on [Github](https://github.com/GPUOpen-Tools/vscode
 
 ## Key Bindings
 
-- `"extension.callRga.dx11"` - default: `"ctrl+."`
-- `"extension.callRga.dx12"` - default: `"ctrl+."`
-- `"extension.callRga.vulkan"` - default: `"ctrl+."`
-- `"extension.callRga.spirv"` - default: `"ctrl+."`
-- `"extension.callRga.amdil"` - default: `"ctrl+."`
 - `"extension.replayRga"`  - default: `"F7"`
 
 ## Settings
@@ -75,16 +69,18 @@ The source code can be found on [Github](https://github.com/GPUOpen-Tools/vscode
 
 ### 1.1.0
 
-Added support for RGA 2.2 -> DX12 and more ASICs.
+- Added support to call DX12 compute shaders introduced with RGA 2.2.
+- Added additional ASICs.
+- Removed certain keybindings as they became ambiguous with the introduction of DX12.
 
 ### 1.0.1
 
-Readme fixes.
+- Readme fixes.
 
 ### 1.0.0
 
-Initial release.
+- Initial release.
 
 ## License
 
-This extension is under the MIT license. See [License](https://github.com/GPUOpen-Tools/vscode-extensions/blob/master/LICENSE) file for full license information.
+- This extension is under the MIT license. See [License](https://github.com/GPUOpen-Tools/vscode-extensions/blob/master/LICENSE) file for full license information.
