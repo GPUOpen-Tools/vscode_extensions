@@ -7,13 +7,7 @@ export class Dx12Command extends RgaCommand
 
     private initializeTargetProfile() : Thenable<any>
     {
-        var picks = ['cs_6_0', 'cs_6_1', 'cs_6_2', 'cs_6_3', 'cs_6_4', 
-                    'ps_6_0', 'ps_6_1', 'ps_6_2', 'ps_6_3', 'ps_6_4', 
-                    'vs_6_0', 'vs_6_1', 'vs_6_2', 'vs_6_3', 'vs_6_4', 
-                    'ds_6_0', 'ds_6_1', 'ds_6_2', 'ds_6_3', 'ds_6_4', 
-                    'gs_6_0', 'gs_6_1', 'gs_6_2', 'gs_6_3', 'gs_6_4',
-                    'hs_6_0', 'hs_6_1', 'hs_6_2', 'hs_6_3', 'hs_6_4', 
-                    'lib_6_0', 'lib_6_1', 'lib_6_2', 'lib_6_3', 'lib_6_4'];
+        var picks = ['cs_6_0', 'cs_6_1', 'cs_6_2', 'cs_6_3', 'cs_6_4'];
         return super.showQuickPick(picks, (pick) => {
                 this.targetProfile = pick;
         })
@@ -27,11 +21,11 @@ export class Dx12Command extends RgaCommand
             ['-s', 'dx12'],
             ['-c', this.getTargetAsic()],
             ['--isa', this.getIsaPath()],
-            ['--il', this.getIlPath()],
-            ['-f', this.getEntryPoint()],
-            ['-p', this.targetProfile],
+            ['--cs-dxil-dis', this.getIlPath()], // RGA 2.2 can't output AMD IL for compute. Thus we just show the DXC output in DXIL.
+            ['--cs-entry', this.getEntryPoint()],
+            ['--cs-model', this.targetProfile],
             ['', userDefineOptions],
-            ['', this.getSourcePath()]
+            ['--cs', this.getSourcePath()]
         );
         return options;
     }
