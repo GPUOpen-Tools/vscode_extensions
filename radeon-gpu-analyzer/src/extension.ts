@@ -3,7 +3,8 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { RgaCommand } from './rgaCommand';
-import { HlslCommand } from './hlslCommand';
+import { Dx11Command } from './dx11Command';
+import { Dx12Command } from './dx12Command';
 import { VulkanCommand } from './vulkanCommand';
 import { SpirvCommand } from './spirvCommand';
 import { AmdilCommand } from './amdilCommand';
@@ -72,8 +73,13 @@ export function activate(context: vscode.ExtensionContext)
     // only create one terminal that is shared for each invocation.
     var terminal = vscode.window.createTerminal("RGA Terminal");
 
-    let callRgaDisposableHlsl = vscode.commands.registerCommand('extension.callRga.hlsl', (editor) => {
-        var command = new HlslCommand(terminal);
+    let callRgaDisposableDx11 = vscode.commands.registerCommand('extension.callRga.dx11', (editor) => {
+        var command = new Dx11Command(terminal);
+        executeCommand(command, replayMap);
+    })
+
+    let callRgaDisposableDx12 = vscode.commands.registerCommand('extension.callRga.dx12', (editor) => {
+        var command = new Dx12Command(terminal);
         executeCommand(command, replayMap);
     })
 
@@ -105,7 +111,8 @@ export function activate(context: vscode.ExtensionContext)
     context.subscriptions.push(callRgaDisposableAmdil);
     context.subscriptions.push(callRgaDisposableSpirv);
     context.subscriptions.push(callRgaDisposableVulkan);
-    context.subscriptions.push(callRgaDisposableHlsl);
+    context.subscriptions.push(callRgaDisposableDx11);
+    context.subscriptions.push(callRgaDisposableDx12);
     context.subscriptions.push(replayDisposable);
 }
 

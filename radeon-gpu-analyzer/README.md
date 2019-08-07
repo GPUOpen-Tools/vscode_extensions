@@ -1,6 +1,6 @@
 # VSCode: Radeon GPU Analyzer
 
-This is a Visual Studio Code extension for the [Radeon GPU Analyzer](https://github.com/GPUOpen-Tools/RGA) (RGA). It aims to make RGA usable directly from within VSCode. For now RGA 1.2 is supported. Later versions may work out of the box. 
+This is a Visual Studio Code extension for the [Radeon GPU Analyzer](https://github.com/GPUOpen-Tools/RGA) (RGA). It aims to make RGA usable directly from within VSCode. For now RGA 2.2 is supported. Later versions may work out of the box. 
 
 ## Features
 
@@ -20,17 +20,18 @@ Supported commands:
 - Call RGA: Vulkan
 - Call RGA: SPIR-V
 - Call RGA: AMD IL
-- Call RGA: HLSL
+- Call RGA: DX11
+- Call RGA: DX12
 - Replay RGA (default key binding: `F7`)
 
-E.g. to compile an HLSL shader for the use on RX Vega:
+E.g. to compile an HLSL shader for the use on RX 5700 XT:
 1. Open VSCode in a parent directory of your shader.
 2. Open your shader in VSCode.
 3. Select the `entry function name` of your shader.
 4. `Ctrl+Shift+P`
-5. Enter the command "Call RGA: HLSL"
-6. Choose your preferred shader profile from the drop down. E.g. cs_5_0 for a compute shader on Shader Model 5.
-7. Choose your preferred target architecture. For RX Vega that would be `gfx900`.
+5. Enter the command "Call RGA: DX12"
+6. Choose your preferred shader profile from the drop down. E.g. cs_6_0 for a compute shader on Shader Model 6.0.
+7. Choose your preferred target architecture. For RX 5700 XT that would be `gfx1010` - call RGA.exe directly to show the full list of supported ASICs.
 8. If your shader compiles successfully, the resulting AMD IL and AMD GCN ISA will open in separate views.
 
 ## Notes
@@ -44,7 +45,7 @@ E.g. to compile an HLSL shader for the use on RX Vega:
 ## Requirements
 
 To use this extension you have to download RGA separately and point to the rga.exe in your settings.
-Download RGA from [Github](https://github.com/GPUOpen-Tools/RGA/releases). Note that for now version 1.2 is supported. Later versions may work out of the box. 
+Download RGA from [Github](https://github.com/GPUOpen-Tools/RGA/releases). Note that for now version 2.2 is supported. Later versions may work out of the box. 
 
 ## Source
 
@@ -52,7 +53,8 @@ The source code can be found on [Github](https://github.com/GPUOpen-Tools/vscode
 
 ## Key Bindings
 
-- `"extension.callRga.hlsl"` - default: `"ctrl+."`
+- `"extension.callRga.dx11"` - default: `"ctrl+."`
+- `"extension.callRga.dx12"` - default: `"ctrl+."`
 - `"extension.callRga.vulkan"` - default: `"ctrl+."`
 - `"extension.callRga.spirv"` - default: `"ctrl+."`
 - `"extension.callRga.amdil"` - default: `"ctrl+."`
@@ -61,7 +63,8 @@ The source code can be found on [Github](https://github.com/GPUOpen-Tools/vscode
 ## Settings
 
 - `"rga.path"` Path to the RGA executable.
-- `"rga.arguments.hlsl"` Define additional arguments to pass to RGA - `HLSL`, e.g. `'--intrinsics --UAVSlot 63'`
+- `"rga.arguments.dx11"` Define additional arguments to pass to RGA - `DX11`, e.g. `'--intrinsics --UAVSlot 63'`
+- `"rga.arguments.dx12"` Define additional arguments to pass to RGA - `DX12`, e.g. `'--intrinsics --UAVSlot 63'`
 - `"rga.arguments.vulkan"` Define additional arguments to pass to RGA - `Vulkan`, e.g. `'--cfg control_flow_graph'`
 - `"rga.arguments.spirv"` Define additional arguments to pass to RGA - `SPIR-V`, e.g. `'--cfg control_flow_graph'`
 - `"rga.arguments.amdil"` Define additional arguments to pass to RGA - `AMD IL`, e.g. `'--cfg control_flow_graph'`
@@ -69,6 +72,10 @@ The source code can be found on [Github](https://github.com/GPUOpen-Tools/vscode
 - `"rga.viewColumn.isa"` Number of the view column the `output ISA` will be shown (1, 2 or 3). Pass in -1 if you don't want to open the ISA.
 
 ## Release Notes
+
+### 1.1.0
+
+Added support for RGA 2.2 -> DX12 and more ASICs.
 
 ### 1.0.1
 

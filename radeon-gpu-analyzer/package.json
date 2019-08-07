@@ -17,8 +17,12 @@
     "contributes": {
         "commands": [
             {
-                "command": "extension.callRga.hlsl",
-                "title": "Call RGA: HLSL"
+                "command": "extension.callRga.dx11",
+                "title": "Call RGA: DX11"
+            },
+            {
+                "command": "extension.callRga.dx12",
+                "title": "Call RGA: DX12"
             },
             {
                 "command": "extension.callRga.vulkan",
@@ -41,7 +45,12 @@
             "editor/context": [
                 {
                     "when": "resourceLangId == hlsl",
-                    "command": "extension.callRga.hlsl",
+                    "command": "extension.callRga.dx11",
+                    "group": "2_rga"
+                },
+                {
+                    "when": "resourceLangId == hlsl",
+                    "command": "extension.callRga.dx12",
                     "group": "2_rga"
                 },
                 {
@@ -84,7 +93,12 @@
         "keybindings": [
             {
                 "when": "resourceLangId == hlsl",
-                "command": "extension.callRga.hlsl",
+                "command": "extension.callRga.dx11",
+                "key": "ctrl+."
+            },
+            {
+                "when": "resourceLangId == hlsl",
+                "command": "extension.callRga.dx12",
                 "key": "ctrl+."
             },
             {
@@ -116,10 +130,15 @@
                     "default": "rga.exe",
                     "description": "Path to the RGA executable. Get it from here: https://github.com/GPUOpen-Tools/RGA/releases"
                 },
-                "rga.arguments.hlsl": {
+                "rga.arguments.dx11": {
                     "type": "string",
                     "default": "",
-                    "description": "Define additional arguments to pass to RGA - HLSL, e.g. '--intrinsics --UAVSlot 63'"
+                    "description": "Define additional arguments to pass to RGA - DX11, e.g. '--intrinsics --UAVSlot 63'"
+                },
+                "rga.arguments.dx12": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Define additional arguments to pass to RGA - DX12, e.g. '--intrinsics --UAVSlot 63'"
                 },
                 "rga.arguments.vulkan": {
                     "type": "string",
