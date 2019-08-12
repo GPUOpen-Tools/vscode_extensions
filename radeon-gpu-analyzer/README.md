@@ -40,6 +40,7 @@ E.g. to compile an HLSL shader for the use on RX 5700 XT:
 - All files are created next to the shader source file.
 - RGA will prefix the generated ISA and IL filenames with the name of the GPU family you are compiling for, and the function entry point if that applies.
 - RGA does not support AMD IL for DX12 shaders as of version 2.2 - the compiled DXIL is shown instead.  
+- DX12 shaders must have their root signature provided directly in the HLSL file.
 
 ## Requirements
 
