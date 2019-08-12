@@ -4,8 +4,8 @@ This is a Visual Studio Code extension for the [Radeon GPU Analyzer](https://git
 
 ## Features
 
-- View the disassembly from compiling HLSL, SPIR-V and Vulkan (GLSL) shaders down to AMD IL and AMD GCN ISA.
-- View the disassembly from compiling AMD IL shaders to AMD GCN ISA.
+- View the disassembly from compiling HLSL, SPIR-V and Vulkan (GLSL) shaders down to AMD IL and AMD GCN/RDNA ISA.
+- View the disassembly from compiling AMD IL shaders to AMD GCN/RDNA ISA.
 - The current word selection is used as entry function of your shader.
 - The shader model / shader type and the target architecture are chosen via drop down menus.
 - The last command per shader is saved and can be replayed. This allows you to spot the impact your code changes have on the ISA. 
@@ -32,7 +32,7 @@ E.g. to compile an HLSL shader for the use on RX 5700 XT:
 5. Enter the command "Call RGA: DX12"
 6. Choose your preferred shader profile from the drop down. E.g. cs_6_0 for a compute shader on Shader Model 6.0.
 7. Choose your preferred target architecture. For RX 5700 XT that would be `gfx1010` - call RGA.exe directly to show the full list of supported ASICs.
-8. If your shader compiles successfully, the resulting AMD IL and AMD GCN ISA will open in separate views.
+8. If your shader compiles successfully, the resulting AMD IL and AMD GCN/RDNA ISA disassembly will open in separate views.
 
 ## Notes
 
@@ -69,8 +69,8 @@ The source code can be found on [Github](https://github.com/GPUOpen-Tools/vscode
 
 ### 1.1.0
 
-- Added support to call DX12 compute shaders introduced with RGA 2.2.
-- Added additional ASICs.
+- Added support for compiling DX12 compute shaders introduced with RGA 2.2.
+- Added support for RDNA targets (gfx1010 - Navi10).
 - Removed certain keybindings as they became ambiguous with the introduction of DX12.
 
 ### 1.0.1
