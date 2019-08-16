@@ -12,7 +12,8 @@ export class AmdilCommand extends RgaCommand
             ['-c', this.getTargetAsic()],
             ['--isa', this.getIsaPath()],
             ['', userDefineOptions],
-            ['', this.getSourcePath()]
+            ['', this.getSourcePath()],
+            ['', this.getCustomArguments()]
         );
         return options;
     }

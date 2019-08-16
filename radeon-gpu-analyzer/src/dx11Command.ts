@@ -31,7 +31,8 @@ export class Dx11Command extends RgaCommand
             ['-f', this.getEntryPoint()],
             ['-p', this.targetProfile],
             ['', userDefineOptions],
-            ['', this.getSourcePath()]
+            ['', this.getSourcePath()],
+            ['', this.getCustomArguments()]
         );
         return options;
     }

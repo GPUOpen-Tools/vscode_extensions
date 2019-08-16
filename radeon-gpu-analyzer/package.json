@@ -5,7 +5,7 @@
     "version": "1.0.1",
     "publisher": "dbaumeis",
     "engines": {
-        "vscode": "^1.14.0"
+        "vscode": "^1.30.0"
     },
     "categories": [
         "Other"
@@ -150,11 +150,11 @@
         "test": "node ./node_modules/vscode/bin/test"
     },
     "devDependencies": {
-        "typescript": "^2.0.3",
-        "vscode": "^1.0.0",
-        "mocha": "^2.3.3",
+        "@types/mocha": "^2.2.32",
         "@types/node": "^6.0.40",
-        "@types/mocha": "^2.2.32"
+        "mocha": "^6.2.0",
+        "typescript": "^2.0.3",
+        "vscode": "^1.1.36"
     },
     "repository": {
         "type": "git",

@@ -24,7 +24,8 @@ export class VulkanCommand extends RgaCommand
             ['--isa', this.getIsaPath()],
             ['--il', this.getIlPath()],
             ['', userDefineOptions],
-            ['--' + this.targetProfile, this.getSourcePath()]
+            ['--' + this.targetProfile, this.getSourcePath()],
+            ['', this.getCustomArguments()]
         );
         return options;
     }

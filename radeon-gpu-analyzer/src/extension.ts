@@ -74,27 +74,27 @@ export function activate(context: vscode.ExtensionContext)
     var terminal = vscode.window.createTerminal("RGA Terminal");
 
     let callRgaDisposableDx11 = vscode.commands.registerCommand('extension.callRga.dx11', (editor) => {
-        var command = new Dx11Command(terminal);
+        var command = new Dx11Command(context, terminal);
         executeCommand(command, replayMap);
     })
 
     let callRgaDisposableDx12 = vscode.commands.registerCommand('extension.callRga.dx12', (editor) => {
-        var command = new Dx12Command(terminal);
+        var command = new Dx12Command(context, terminal);
         executeCommand(command, replayMap);
     })
 
     let callRgaDisposableVulkan = vscode.commands.registerCommand('extension.callRga.vulkan', (editor) => {
-        var command = new VulkanCommand(terminal);
+        var command = new VulkanCommand(context, terminal);
         executeCommand(command, replayMap);
     })
 
     let callRgaDisposableSpirv = vscode.commands.registerCommand('extension.callRga.spirv', (editor) => {
-        var command = new SpirvCommand(terminal);
+        var command = new SpirvCommand(context, terminal);
         executeCommand(command, replayMap);
     })
 
     let callRgaDisposableAmdil = vscode.commands.registerCommand('extension.callRga.amdil', (editor) => {
-        var command = new AmdilCommand(terminal);
+        var command = new AmdilCommand(context, terminal);
         executeCommand(command, replayMap);
     })
 

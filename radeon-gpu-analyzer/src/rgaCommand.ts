@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import {QuickPickItem} from 'vscode';
 
 export abstract class RgaCommand 
 {
@@ -8,10 +9,15 @@ export abstract class RgaCommand
     private targetAsic = '';
     private entryPoint = '';
     private terminal : vscode.Terminal;
+    private context: vscode.ExtensionContext;
 
-    constructor (terminal : vscode.Terminal)
+    private static RING_SIZE = 10; // Controls the number of custom arguments to cache.
+    private customArguments = '';
+
+    constructor (context: vscode.ExtensionContext, terminal : vscode.Terminal)
     {
         this.terminal = terminal;
+        this.context = context;
     }
 
     protected getSourcePath() : string
@@ -42,6 +48,16 @@ export abstract class RgaCommand
     protected getTerminal() : vscode.Terminal
     {
         return this.terminal;
+    }
+
+    protected getContex() : vscode.ExtensionContext
+    {
+        return this.context;
+    }
+
+    protected getCustomArguments() : string
+    {
+        return this.customArguments;
     }
 
     protected initializeSourcePath() : boolean
@@ -92,7 +108,98 @@ export abstract class RgaCommand
 
         return this.showQuickPick(picks, (pick) => {
                 this.targetAsic = pick;
-        })
+        });
+    }
+
+    private storePick(pick : string)
+    {
+        var picks = this.loadPicks();
+        // Only keep a small number of picks here, so even if we use an array this should be reasonably fast.
+        var found : boolean = false;
+        var foundIndex = 0;
+        for(var i = 0; i < picks.length; ++i)
+        {
+            if(picks[i] == pick)
+            {
+                found = true;
+                foundIndex = i;
+                break;
+            }
+        }
+
+        var next = this.context.globalState.get<number>("RgaCommand.next");
+        if(!next)
+        {
+            next = 0;
+        }
+
+        if(!found)
+        {
+            if(picks.length < RgaCommand.RING_SIZE)
+            {
+                picks.push(pick);
+                this.context.globalState.update("RgaCommand.customArguments", picks);
+            }
+            else
+            {            
+                // Need to replace the next pick in the ring.
+                picks[next] = pick;
+                next = (next + 1) % RgaCommand.RING_SIZE;
+                this.context.globalState.update("RgaCommand.next", next);
+                this.context.globalState.update("RgaCommand.customArguments", picks);
+            }
+        }
+        else
+        {
+            // Make sure the pick is moved to the front.
+            var last = (next + picks.length - 1) % picks.length;
+            var tmp = picks[last];
+            picks[last] = picks[foundIndex];
+            picks[foundIndex] = tmp;
+            this.context.globalState.update("RgaCommand.customArguments", picks);
+        }
+    }
+
+    private loadPicks() : Array<string>
+    {
+        var customArguments = this.context.globalState.get<Array<string>>("RgaCommand.customArguments");
+        var picks = new Array<string>();
+        if(customArguments)
+        {
+            picks = picks.concat(customArguments);
+        }
+        return picks;
+    }
+
+    private reorderPicks(picks : Array<string>) : Array<string>
+    {
+        // reorder the elements: last pick has to be on top
+        var next = this.context.globalState.get<number>("RgaCommand.next");
+        if(!next)
+        {
+            next = 0;
+        }
+        
+        var reorderedPicks = new Array<string>(picks.length);
+        for(var i = 0; i < reorderedPicks.length; ++i)
+        {
+            var j = (next + picks.length - 1 - i) % picks.length;
+            reorderedPicks[i] = picks[j];
+        }
+        return reorderedPicks;
+    }
+
+    private appendCustomArguments() : Thenable<any>
+    {
+        var picks = this.loadPicks();
+        picks = this.reorderPicks(picks);
+        return this.showQuickInput(picks, (pick) => {
+            this.customArguments = pick; // It's not enforced that this pick is part of the original picks 
+            if(pick !== "")
+            {
+                this.storePick(pick);
+            }
+        });
     }
 
     public async initializeCommand() : Promise<boolean>
@@ -102,7 +209,8 @@ export abstract class RgaCommand
             () => {return this.initializeSourcePath()},
             () => {return this.initializeIsaPath()},
             () => {return this.initializeIlPath()},
-            () => {return this.initializeTargetAsic()}   
+            () => {return this.initializeTargetAsic()},
+            () => {return this.appendCustomArguments()}
         );
         return this.callAll(methods);
     }  
@@ -141,6 +249,47 @@ export abstract class RgaCommand
             return false;
         });
         return promise;
+    }
+
+    // Shows quick picks but also lets the user insert custom strings. This is not currently supported by the VS Code API, thus we have to get creative :( 
+    protected async showQuickInput(picks : string[], method : (input) => void)
+    {
+        var disposables = [];
+        try {
+            var promise = new Promise((resolve, _) => {
+                var quickPick = vscode.window.createQuickPick();
+                var resolved = false;
+                var tmpPicks = [""].concat(picks);
+                quickPick.items = tmpPicks.map(label => ({label}));
+                quickPick.onDidChangeValue((value) => {
+                    tmpPicks = [value].concat(picks);
+                    quickPick.items = tmpPicks.map(label => ({label}));
+                });
+                quickPick.onDidAccept(() => {
+                    resolve(quickPick.selectedItems[0].label);
+                    resolved = true;
+                    quickPick.hide();
+                });
+                quickPick.onDidHide(() => {
+                    if(!resolved) {
+                        resolve(undefined);
+                    }
+                });
+                quickPick.show();
+            });
+            promise.then((pick) => {
+                if(pick !== undefined)
+                {
+                    method(pick);              
+                    return true;
+                }
+                return false;
+            });
+            return promise;
+        }
+        finally {
+            disposables.forEach(element => element.dispose());
+        }
     }
 
     public execute() : void

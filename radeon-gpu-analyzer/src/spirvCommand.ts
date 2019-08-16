@@ -13,7 +13,8 @@ export class SpirvCommand extends RgaCommand
             ['--isa', this.getIsaPath()],
             ['--il', this.getIlPath()],
             ['', userDefineOptions],
-            ['', this.getSourcePath()]
+            ['', this.getSourcePath()],
+            ['', this.getCustomArguments()]
         );
         return options;
     }

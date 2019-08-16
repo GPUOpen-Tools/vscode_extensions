@@ -25,7 +25,8 @@ export class Dx12Command extends RgaCommand
             ['--cs-entry', this.getEntryPoint()],
             ['--cs-model', this.targetProfile],
             ['', userDefineOptions],
-            ['--cs', this.getSourcePath()]
+            ['--cs', this.getSourcePath()],
+            ['', this.getCustomArguments()]
         );
         return options;
     }
