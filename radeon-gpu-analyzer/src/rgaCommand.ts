@@ -266,21 +266,23 @@ export abstract class RgaCommand
                     quickPick.items = tmpPicks.map(label => ({label}));
                 });
                 quickPick.onDidAccept(() => {
-                    resolve(quickPick.selectedItems[0].label);
                     resolved = true;
                     quickPick.hide();
                 });
                 quickPick.onDidHide(() => {
-                    if(!resolved) {
+                    if(resolved) {
+                        resolve(quickPick.selectedItems[0])
+                    }
+                    else {
                         resolve(undefined);
                     }
                 });
                 quickPick.show();
             });
-            promise.then((pick) => {
-                if(pick !== undefined)
+            promise.then((pick : vscode.QuickPickItem) => {
+                if(pick)
                 {
-                    method(pick);              
+                    method(pick.label);              
                     return true;
                 }
                 return false;
