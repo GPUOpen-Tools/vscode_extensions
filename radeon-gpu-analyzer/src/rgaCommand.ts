@@ -258,6 +258,7 @@ export abstract class RgaCommand
         try {
             var promise = new Promise((resolve, _) => {
                 var quickPick = vscode.window.createQuickPick();
+                quickPick.placeholder = "Custom arguments - Leave empty to skip."
                 var resolved = false;
                 var tmpPicks = [""].concat(picks);
                 quickPick.items = tmpPicks.map(label => ({label}));
