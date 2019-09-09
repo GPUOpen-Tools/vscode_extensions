@@ -11,16 +11,31 @@
         "Languages"
     ],
     "contributes": {
-         "languages": [{
-            "id": "amd-gcn-isa",
-            "aliases": ["AMD GCN ISA", "isa"],
-            "extensions": [".isa",".il",".isa.txt",".il.txt"],
-            "configuration": "./language-configuration.json"
-        }],
-        "grammars": [{
-            "language": "amd-gcn-isa",
-            "scopeName": "source.isa",
-            "path": "./syntaxes/isa.tmLanguage"
-        }]
+        "languages": [
+            {
+                "id": "amd-gcn-isa",
+                "aliases": [
+                    "AMD GCN ISA",
+                    "isa"
+                ],
+                "extensions": [
+                    ".isa",
+                    ".il",
+                    ".isa.txt",
+                    ".il.txt"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "amd-gcn-isa",
+                "scopeName": "source.isa",
+                "path": "./syntaxes/isa.tmLanguage"
+            }
+        ]
+    },
+    "dependencies": {
+        "vscode": "^1.1.36"
     }
 }
