@@ -207,6 +207,8 @@ export abstract class RgaCommand
 
     public async initializeCommand() : Promise<boolean>
     {
+        this.initializeEntryPoint(); 
+
         var methods = [];
         methods.push(
             () => {return this.initializeTargetAsic()},
