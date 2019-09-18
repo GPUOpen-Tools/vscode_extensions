@@ -14,7 +14,7 @@ export class Dx11Command extends RgaCommand
                     'gs_5_0',  
                     'hs_5_0',  
                     'lib_5_0'];
-        return super.showQuickPick(picks, (pick) => {
+        return super.showQuickPick(picks, "Shader model.", (pick) => {
                 this.targetProfile = pick;
         })
     }

@@ -9,7 +9,7 @@ export class VulkanCommand extends RgaCommand
     {
         // TODO query from file extension
         var picks = ['comp', 'frag', 'vert', 'tesc', 'tese', 'geom']; 
-        return super.showQuickPick(picks, (pick) => {
+        return super.showQuickPick(picks, "Shader type.", (pick) => {
                 this.targetProfile = pick;
         })
     }

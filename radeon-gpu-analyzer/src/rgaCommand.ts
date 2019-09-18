@@ -7,7 +7,7 @@ export abstract class RgaCommand
     private isaPath = '';
     private ilPath = '';
     private targetAsic = '';
-    private entryPoint = '';
+    private entryPoints = [];
     private terminal : vscode.Terminal;
     private context: vscode.ExtensionContext;
 
@@ -42,7 +42,12 @@ export abstract class RgaCommand
 
     protected getEntryPoint() : string
     {
-        return this.entryPoint;
+        return this.entryPoints[0];
+    }
+
+    protected getAllEntryPoints() : string[]
+    {
+        return this.entryPoints;
     }
 
     protected getTerminal() : vscode.Terminal
@@ -80,20 +85,23 @@ export abstract class RgaCommand
 
     protected initializeEntryPoint() : boolean
     {
-        var selection = vscode.window.activeTextEditor.selection;
-        var text = vscode.window.activeTextEditor.document.getText(selection);
-        
-        var regex = new RegExp('^[a-zA-Z][a-zA-Z0-9]*$');
-        var match = text.match(regex);
-        
-        if(match === null || match.length !== 1)
-        {
-            vscode.window.showInformationMessage("Please select a single word as entry point.")
-            return false;
-        }
-
-        this.entryPoint = text;
-        return true;
+        var selections = vscode.window.activeTextEditor.selections;
+        var success = true;
+        selections.forEach(selection => {
+            var text = vscode.window.activeTextEditor.document.getText(selection);
+            
+            var regex = new RegExp('^[a-zA-Z][a-zA-Z0-9]*$');
+            var match = text.match(regex);
+            
+            if(match === null || match.length !== 1)
+            {
+                vscode.window.showInformationMessage("Please select only whole words as entry points.")
+                success = false;
+            }
+    
+            this.entryPoints.push(text);            
+        });
+        return success;
     }
 
     private initializeTargetAsic() : Thenable<any>
@@ -106,14 +114,14 @@ export abstract class RgaCommand
         'Pitcairn', 'Spectre', 'Spooky', 'Stoney', 
         'Tahiti', 'Tonga', 'gfx804']; 
 
-        return this.showQuickPick(picks, (pick) => {
+        return this.showQuickPick(picks, "Target ASIC.", (pick) => {
                 this.targetAsic = pick;
         });
     }
 
-    private storePick(pick : string)
+    private storePick(pick : string, key : string)
     {
-        var picks = this.loadPicks();
+        var picks = this.loadPicks(key);
         // Only keep a small number of picks here, so even if we use an array this should be reasonably fast.
         var found : boolean = false;
         var foundIndex = 0;
@@ -127,7 +135,7 @@ export abstract class RgaCommand
             }
         }
 
-        var next = this.context.globalState.get<number>("RgaCommand.next");
+        var next = this.context.globalState.get<number>("RgaCommand." + key + ".next");
         if(!next)
         {
             next = 0;
@@ -138,15 +146,15 @@ export abstract class RgaCommand
             if(picks.length < RgaCommand.RING_SIZE)
             {
                 picks.push(pick);
-                this.context.globalState.update("RgaCommand.customArguments", picks);
+                this.context.globalState.update("RgaCommand." + key, picks);
             }
             else
             {            
                 // Need to replace the next pick in the ring.
                 picks[next] = pick;
                 next = (next + 1) % RgaCommand.RING_SIZE;
-                this.context.globalState.update("RgaCommand.next", next);
-                this.context.globalState.update("RgaCommand.customArguments", picks);
+                this.context.globalState.update("RgaCommand." + key + ".next", next);
+                this.context.globalState.update("RgaCommand." + key, picks);
             }
         }
         else
@@ -156,13 +164,13 @@ export abstract class RgaCommand
             var tmp = picks[last];
             picks[last] = picks[foundIndex];
             picks[foundIndex] = tmp;
-            this.context.globalState.update("RgaCommand.customArguments", picks);
+            this.context.globalState.update("RgaCommand." + key, picks);
         }
     }
 
-    private loadPicks() : Array<string>
+    private loadPicks(key : string) : Array<string>
     {
-        var customArguments = this.context.globalState.get<Array<string>>("RgaCommand.customArguments");
+        var customArguments = this.context.globalState.get<Array<string>>("RgaCommand." + key);
         var picks = new Array<string>();
         if(customArguments)
         {
@@ -171,10 +179,10 @@ export abstract class RgaCommand
         return picks;
     }
 
-    private reorderPicks(picks : Array<string>) : Array<string>
+    private reorderPicks(picks : Array<string>, key : string) : Array<string>
     {
         // reorder the elements: last pick has to be on top
-        var next = this.context.globalState.get<number>("RgaCommand.next");
+        var next = this.context.globalState.get<number>("RgaCommand." + key + ".next");
         if(!next)
         {
             next = 0;
@@ -191,25 +199,25 @@ export abstract class RgaCommand
 
     private appendCustomArguments() : Thenable<any>
     {
-        var picks = this.loadPicks();
-        picks = this.reorderPicks(picks);
-        return this.showQuickInput(picks, (pick) => {
-            this.customArguments = pick; // It's not enforced that this pick is part of the original picks 
-            if(pick !== "")
-            {
-                this.storePick(pick);
-            }
+        return this.showQuickCustomPicks("customArguments", "Custom arguments - Leave empty to skip.", (pick) => {
+            this.customArguments = pick;
+            return true;
         });
     }
 
     public async initializeCommand() : Promise<boolean>
     {
-        var methods = this.getInitializingFunctions();
+        var methods = [];
         methods.push(
+            () => {return this.initializeTargetAsic()},
             () => {return this.initializeSourcePath()},
             () => {return this.initializeIsaPath()},
-            () => {return this.initializeIlPath()},
-            () => {return this.initializeTargetAsic()},
+            () => {return this.initializeIlPath()}
+        );
+
+        methods = methods.concat(this.getInitializingFunctions());
+        
+        methods.push(
             () => {return this.appendCustomArguments()}
         );
         return this.callAll(methods);
@@ -237,9 +245,9 @@ export abstract class RgaCommand
         return rgaPath + ' ' + opts.join(' ');
     }
 
-    protected async showQuickPick(picks : string[], method : (pick) => void)
+    protected async showQuickPick(picks : string[], hint : string, method : (pick) => void)
     {
-        var promise = vscode.window.showQuickPick(picks);
+        var promise = vscode.window.showQuickPick(picks, {placeHolder : hint});
         promise.then((pick) => {
             if(pick)
             {
@@ -252,13 +260,13 @@ export abstract class RgaCommand
     }
 
     // Shows quick picks but also lets the user insert custom strings. This is not currently supported by the VS Code API, thus we have to get creative :( 
-    protected async showQuickInput(picks : string[], method : (input) => void)
+    protected async showQuickInput(picks : string[], hint : string, method : (input) => void)
     {
         var disposables = [];
         try {
             var promise = new Promise((resolve, _) => {
                 var quickPick = vscode.window.createQuickPick();
-                quickPick.placeholder = "Custom arguments - Leave empty to skip."
+                quickPick.placeholder = hint;
                 var resolved = false;
                 var tmpPicks = [""].concat(picks);
                 quickPick.items = tmpPicks.map(label => ({label}));
@@ -293,6 +301,18 @@ export abstract class RgaCommand
         finally {
             disposables.forEach(element => element.dispose());
         }
+    }
+
+    protected showQuickCustomPicks(key : string, hint : string, method : (pick) => boolean) : Thenable<any>
+    {
+        var picks = this.loadPicks(key);
+        picks = this.reorderPicks(picks, key);
+        return this.showQuickInput(picks, hint, (pick) => {
+            if(method(pick) && pick !== "")
+            {
+                this.storePick(pick, key);
+            }
+        });
     }
 
     public execute() : void
