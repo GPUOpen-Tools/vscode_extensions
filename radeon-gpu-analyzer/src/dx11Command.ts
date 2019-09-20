@@ -28,7 +28,7 @@ export class Dx11Command extends RgaCommand
             ['-c', this.getTargetAsic()],
             ['--isa', this.getIsaPath()],
             ['--il', this.getIlPath()],
-            ['-f', this.getEntryPoint()],
+            ['-f', this.getFirstSelection()], // entry point
             ['-p', this.targetProfile],
             ['', userDefineOptions],
             ['', this.getSourcePath()],

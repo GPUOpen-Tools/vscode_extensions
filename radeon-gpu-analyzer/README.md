@@ -41,7 +41,7 @@ E.g. to compile an HLSL shader for the use on RX 5700 XT:
 - RGA will prefix the generated ISA and IL filenames with the name of the GPU family you are compiling for, and the function entry point if that applies.
 - RGA does not support AMD IL for DX12 shaders as of version 2.2 - the compiled DXIL is shown instead.  
 - DX12 shaders must define and reference the root signature through the [RootSignature()] attribute.
-- Compiling DX12 graphics (= non-compute) shaders requires to select multiple entry points beforehand. The standard keyboard shortcut in VS Code for multi selection is `Alt`.  
+- Compiling DX12 graphics (= non-compute) pipelines requires to select multiple entry points beforehand. The standard keyboard shortcut in VS Code for multi selection is `Alt`.  
 
 ## Requirements
 

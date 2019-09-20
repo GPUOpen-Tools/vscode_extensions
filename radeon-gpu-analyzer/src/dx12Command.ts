@@ -7,6 +7,11 @@ export class Dx12Command extends RgaCommand
     private gpsoPath = '';
     private stages = [];
 
+    protected initializeCustomArguments() : Thenable<any>
+    {
+        return super.pickCustomArguments("Custom arguments - Use '--rs-bin <path>' if your root signature is not already defined in the file.");
+    }
+
     private initializeTargetProfile() : Thenable<any>
     {
         var picks = ['6_0', '6_1', '5_0', '5_1', '6_2', '6_3', '6_4'];
@@ -23,16 +28,11 @@ export class Dx12Command extends RgaCommand
         });
     }
 
-    private storeShaderStage(stage : string, entryPoint : string)
-    {
-        this.stages.push("--" + stage + "-entry " + entryPoint);
-    }
-
     private initializeShaderStage(entryPoint : string) : Thenable<any>
     {
         var picks = ['vs', 'ps', 'cs', 'gs', 'hs', 'ds'];
         return super.showQuickPick(picks, "Shader stage for " + entryPoint, pick => {
-            this.storeShaderStage(pick, entryPoint);
+            this.stages.push("--" + pick + "-entry " + entryPoint);
         });
     }
 
@@ -62,9 +62,12 @@ export class Dx12Command extends RgaCommand
     protected getInitializingFunctions()
     {
         var methods = [];
-        var selections = this.getAllEntryPoints();
+        var selections = this.getSelections();
         selections.forEach(selection => {
-            methods.push(() => {return this.initializeShaderStage(selection)});
+            if(selection !== '')
+            {
+                methods.push(() => {return this.initializeShaderStage(selection)});
+            }
         });
 
         methods = methods.concat([

@@ -7,7 +7,7 @@ export abstract class RgaCommand
     private isaPath = '';
     private ilPath = '';
     private targetAsic = '';
-    private entryPoints = [];
+    private selections = [];
     private terminal : vscode.Terminal;
     private context: vscode.ExtensionContext;
 
@@ -40,14 +40,14 @@ export abstract class RgaCommand
         return this.targetAsic;
     }
 
-    protected getEntryPoint() : string
+    protected getFirstSelection() : string
     {
-        return this.entryPoints[0];
+        return this.selections[0];
     }
 
-    protected getAllEntryPoints() : string[]
+    protected getSelections() : string[]
     {
-        return this.entryPoints;
+        return this.selections;
     }
 
     protected getTerminal() : vscode.Terminal
@@ -83,7 +83,7 @@ export abstract class RgaCommand
         return true;
     }
 
-    protected initializeEntryPoint() : boolean
+    protected initializeSelections() : boolean
     {
         var selections = vscode.window.activeTextEditor.selections;
         var success = true;
@@ -99,7 +99,7 @@ export abstract class RgaCommand
                 success = false;
             }
     
-            this.entryPoints.push(text);            
+            this.selections.push(text);            
         });
         return success;
     }
@@ -197,17 +197,22 @@ export abstract class RgaCommand
         return reorderedPicks;
     }
 
-    private appendCustomArguments() : Thenable<any>
+    protected pickCustomArguments(text : string) : Thenable<any>
     {
-        return this.showQuickCustomPicks("customArguments", "Custom arguments - Leave empty to skip.", (pick) => {
+        return this.showQuickCustomPicks("customArguments", text, (pick) => {
             this.customArguments = pick;
             return true;
         });
     }
 
+    protected initializeCustomArguments() : Thenable<any>
+    {
+        return this.pickCustomArguments("Custom arguments - Leave empty to skip.");
+    }
+
     public async initializeCommand() : Promise<boolean>
     {
-        this.initializeEntryPoint(); 
+        this.initializeSelections(); 
 
         var methods = [];
         methods.push(
@@ -220,7 +225,7 @@ export abstract class RgaCommand
         methods = methods.concat(this.getInitializingFunctions());
         
         methods.push(
-            () => {return this.appendCustomArguments()}
+            () => {return this.initializeCustomArguments()}
         );
         return this.callAll(methods);
     }  
@@ -305,6 +310,7 @@ export abstract class RgaCommand
         }
     }
 
+    // Shows quick pick that lets the user also insert custom strings. Caches the last RING_SIZE custom arguments as additional quick picks.
     protected showQuickCustomPicks(key : string, hint : string, method : (pick) => boolean) : Thenable<any>
     {
         var picks = this.loadPicks(key);
