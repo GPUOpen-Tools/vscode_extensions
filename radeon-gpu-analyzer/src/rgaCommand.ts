@@ -107,7 +107,7 @@ export abstract class RgaCommand
     private initializeTargetAsic() : Thenable<any>
     {
         // TODO query from rga
-        var picks =  ['gfx1010', 'gfx906', 'gfx902', 'gfx900', 'Ellesmere', 'Fiji', 
+        var picks =  ['gfx1010', 'gfx1012', 'gfx906', 'gfx902', 'gfx900', 'Ellesmere', 'Fiji', 
         'Baffin', 'Bonaire', '"Bristol Ridge"', 'Capeverde', 
         'Carrizo', 'Hainan', 'Hawaii', 
         'Iceland', 'Kalindi', 'Mullins', 'Oland', 
