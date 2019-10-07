@@ -1,6 +1,6 @@
 # VSCode: Radeon GPU Analyzer
 
-This is a Visual Studio Code extension for the [Radeon GPU Analyzer](https://github.com/GPUOpen-Tools/RGA) (RGA). It aims to make RGA usable directly from within VSCode. For now RGA 2.2 is supported. Later versions may work out of the box. 
+This is a Visual Studio Code extension for the [Radeon GPU Analyzer](https://github.com/GPUOpen-Tools/RGA) (RGA). It aims to make RGA usable directly from within VSCode. For now RGA 2.3 is supported. Later versions may work out of the box. 
 
 ## Features
 
@@ -40,13 +40,14 @@ E.g. to compile an HLSL shader for the use on RX 5700 XT:
 - All files are created next to the shader source file.
 - RGA will prefix the generated ISA and IL filenames with the name of the GPU family you are compiling for, and the function entry point if that applies.
 - RGA does not support AMD IL for DX12 shaders as of version 2.2 - the compiled DXIL is shown instead.  
-- DX12 shaders must define and reference the root signature through the [RootSignature()] attribute.
-- Compiling DX12 graphics (= non-compute) pipelines requires to select multiple entry points beforehand. The standard keyboard shortcut in VS Code for multi selection is `Alt`.  
+- DX12 shaders must define and reference the root signature through the [RootSignature()] attribute or use `--rs-bin` as a custom argument.
+- Compiling DX12 graphics (= non-compute) pipelines requires to select multiple entry points beforehand. The standard keyboard shortcut in VS Code for multi selection is `Alt`. 
+- Compiling DX12 graphics pipelines also requires a `gpso` file that provides additional information about the pipeline. For compute shaders just leave the selection empty.
 
 ## Requirements
 
 To use this extension you have to download RGA separately and point to the rga.exe in your settings.
-Download RGA from [Github](https://github.com/GPUOpen-Tools/RGA/releases). Note that for now version 2.2 is supported. Later versions may work out of the box. 
+Download RGA from [Github](https://github.com/GPUOpen-Tools/RGA/releases). Note that for now version 2.3 is supported. Later versions may work out of the box. 
 
 ## Source
 
@@ -72,7 +73,8 @@ The source code can be found on [Github](https://github.com/GPUOpen-Tools/vscode
 ### 1.1.0
 
 - Added support for compiling DX12 compute shaders introduced with RGA 2.2.
-- Added support for RDNA targets (gfx1010 - Navi10).
+- Added support for compiling DX12 graphics pipelines introduced with RGA 2.3.
+- Added support for RDNA targets (gfx1010 = Navi10 and gfx1012 = Navi14).
 - Removed certain keybindings as they became ambiguous with the introduction of DX12.
 
 ### 1.0.1
