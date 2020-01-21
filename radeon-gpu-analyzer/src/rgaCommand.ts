@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import {QuickPickItem} from 'vscode';
+import * as child from 'child_process';
 
 export abstract class RgaCommand 
 {
@@ -8,15 +9,15 @@ export abstract class RgaCommand
     private ilPath = '';
     private targetAsic = '';
     private selections = [];
-    private terminal : vscode.Terminal;
+    private output : vscode.OutputChannel;
     private context: vscode.ExtensionContext;
 
     private static RING_SIZE = 10; // Controls the number of custom arguments to cache.
     private customArguments = '';
 
-    constructor (context: vscode.ExtensionContext, terminal : vscode.Terminal)
+    constructor (context: vscode.ExtensionContext, output : vscode.OutputChannel)
     {
-        this.terminal = terminal;
+        this.output = output;
         this.context = context;
     }
 
@@ -50,9 +51,9 @@ export abstract class RgaCommand
         return this.selections;
     }
 
-    protected getTerminal() : vscode.Terminal
+    protected getOutputChannel() : vscode.OutputChannel
     {
-        return this.terminal;
+        return this.output;
     }
 
     protected getContex() : vscode.ExtensionContext
@@ -326,8 +327,11 @@ export abstract class RgaCommand
     public execute() : void
     {
         var commandLine = this.buildCommandString();
-        this.terminal.show(true);
-        this.terminal.sendText(commandLine);
+        var rga : child.ChildProcess = child.exec(commandLine, (error: Error, stdout: string, stderr: string) => {
+            this.output.show(true);
+            this.output.appendLine(commandLine);
+            this.output.appendLine(stdout);
+        });
     }
 
     // Provide a way for the implementing command to add its own command line options.

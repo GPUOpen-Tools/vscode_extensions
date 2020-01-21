@@ -70,31 +70,31 @@ export function activate(context: vscode.ExtensionContext)
     isaFileSystemWatcher.onDidCreate(openIsaFile); 
     isaFileSystemWatcher.onDidChange(openIsaFile); 
     
-    // only create one terminal that is shared for each invocation.
-    var terminal = vscode.window.createTerminal("RGA Terminal");
+    // only create one output channel that is shared for each invocation.
+    var output = vscode.window.createOutputChannel("RGA Output");
 
     let callRgaDisposableDx11 = vscode.commands.registerCommand('extension.callRga.dx11', (editor) => {
-        var command = new Dx11Command(context, terminal);
+        var command = new Dx11Command(context, output);
         executeCommand(command, replayMap);
     })
 
     let callRgaDisposableDx12 = vscode.commands.registerCommand('extension.callRga.dx12', (editor) => {
-        var command = new Dx12Command(context, terminal);
+        var command = new Dx12Command(context, output);
         executeCommand(command, replayMap);
     })
 
     let callRgaDisposableVulkan = vscode.commands.registerCommand('extension.callRga.vulkan', (editor) => {
-        var command = new VulkanCommand(context, terminal);
+        var command = new VulkanCommand(context, output);
         executeCommand(command, replayMap);
     })
 
     let callRgaDisposableSpirv = vscode.commands.registerCommand('extension.callRga.spirv', (editor) => {
-        var command = new SpirvCommand(context, terminal);
+        var command = new SpirvCommand(context, output);
         executeCommand(command, replayMap);
     })
 
     let callRgaDisposableAmdil = vscode.commands.registerCommand('extension.callRga.amdil', (editor) => {
-        var command = new AmdilCommand(context, terminal);
+        var command = new AmdilCommand(context, output);
         executeCommand(command, replayMap);
     })
 

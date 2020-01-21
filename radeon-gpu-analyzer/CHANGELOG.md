@@ -1,5 +1,8 @@
 # Change Log
 
+### 1.1.1
+- Use child process to execute commands.
+
 ### 1.1.0
 
 - Added support for compiling DX12 compute shaders introduced with RGA 2.2.

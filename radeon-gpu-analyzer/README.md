@@ -10,8 +10,6 @@ This is a Visual Studio Code extension for the [Radeon GPU Analyzer](https://git
 - The shader model / shader type and the target architecture are chosen via drop down menus.
 - The last command per shader is saved and can be replayed. This allows you to spot the impact your code changes have on the ISA. 
 - If you open the shader in a VSCode project, created files will open in a new view.
-- See all compiler errors and warnings in the VSCode terminal.
-- You can add language specific command line arguments via settings or just configure the command line in the terminal directly.
 
 ## Usage
 
@@ -69,6 +67,9 @@ The source code can be found on [Github](https://github.com/GPUOpen-Tools/vscode
 - `"rga.viewColumn.isa"` Number of the view column the `output ISA` will be shown (1, 2 or 3). Pass in -1 if you don't want to open the ISA.
 
 ## Release Notes
+
+### 1.1.1
+- Use child process to execute commands.
 
 ### 1.1.0
 
